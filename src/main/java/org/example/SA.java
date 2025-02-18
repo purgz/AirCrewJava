@@ -3,10 +3,7 @@ package org.example;
 import org.math.plot.Plot2DPanel;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class SA {
@@ -22,7 +19,7 @@ public class SA {
     public static void main(String[] args) throws IOException {
         System.out.println("Simulated annealing");
 
-        String file1 = "src/main/java/org/example/sppnw42.txt";
+        String file1 = "/sppnw41.txt";
 
         SA sa = new SA();
 
@@ -56,6 +53,8 @@ public class SA {
         JFrame frame = new JFrame("Plot panel");
         frame.setContentPane(plot);
         frame.setVisible(true);
+
+
     }
 
     public SA(){
@@ -251,7 +250,8 @@ public class SA {
 
     public void readFile(String fileName) throws IOException{
 
-        BufferedReader reader = new BufferedReader(new FileReader(fileName));
+        InputStream is = SA.class.getResourceAsStream(fileName);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
         String currentLine = reader.readLine();
 

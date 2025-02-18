@@ -51,6 +51,7 @@ public class SA {
         plot.addLinePlot("Cost history", g);
         plot.addLegend("NORTH");
         JFrame frame = new JFrame("Plot panel");
+        frame.setSize(800,800);
         frame.setContentPane(plot);
         frame.setVisible(true);
 

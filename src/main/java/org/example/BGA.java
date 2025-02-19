@@ -26,7 +26,7 @@ public class BGA {
 
         // Please excuse the duplicated code from SA file, it seemed easier this way
 
-        String file1 = "/sppnw41.txt";
+        String file1 = "/sppnw42.txt";
 
         BGA bga = new BGA();
 
@@ -98,50 +98,47 @@ public class BGA {
         int maxIter = 10000;
 
         int popSize = population.size();
-        int parentSize = Math.round(popSize * 0.3f);
+        int parentSize = 50;
 
         PopulationComparator comparator = new PopulationComparator();
 
         // EVALUATE FITNESS
         population.sort(comparator);
 
+        // Attemping something similar to the simulated annealing reheating
         for (int i = 0; i < maxIter; i++){
 
+            mutationRate = Math.max((float) 1 / population.get(0).length, mutationRate * 0.9f);
             if (i % 100 == 0){
                 System.out.println("Best at " + i + " " + fitness(population.get(0)));
             }
 
+            List<int[]> newPopulation = new ArrayList<>();
+
             // SELECT PARENTS
             List<int[]> parents = new ArrayList<>(population.subList(0,parentSize));
+            List<int[]> tail = new ArrayList<>(population.subList(popSize - 50, popSize));
 
-            int[][] children = null;
+            parents.addAll(tail);
+
+            newPopulation.addAll(parents);
             // VARIATION - Breed new individuals
-            for (int j = 0; j < popSize / 2; j++){
-
-                // Apply crossover on pairs of parents
-
-
-                int r1 = rand.nextInt(parents.size());
+            while (newPopulation.size() < popSize){
+                int r = rand.nextInt(parents.size());
                 int r2 = rand.nextInt(parents.size());
-
-                children = crossOver(parents.get(r1), parents.get(r2));
-
-                // Apply mutation to new children
-                children[0] = mutateGenoType(children[0]);
-                children[1] = mutateGenoType(children[1]);
-
+                int[] child = parents.get(r).clone();
+                if (Math.random() < 0.85){
+                    //Apply crossover
+                    child = crossOver(parents.get(r), parents.get(r2));
+                }
+                child = mutateGenoType(child);
+                newPopulation.add(child);
             }
 
 
+            newPopulation.sort(comparator);
 
-            if (children != null){
-                population.add(children[0]);
-                population.add(children[1]);
-            }
-
-            population.sort(comparator);
-
-            population = population.subList(0, popSize);
+            population = newPopulation;
         }
 
 
@@ -162,32 +159,29 @@ public class BGA {
         int violations = numViolations(constraints);
 
         // Simple static penalty coefficient
-        total = total + 100000 * (violations * violations);
+        total = total + 10000 * (violations * violations);
 
         return total;
     }
 
     // Takes two genotypes and returns the simple crossover in array {child1,child2}
-    public int[][] crossOver(int[] parent1, int[] parent2){
+    public int[] crossOver(int[] parent1, int[] parent2){
 
         // Find random crossover point
         int crossover = rand.nextInt(parent1.length);
 
         int[] child1 = new int[parent1.length];
-        int[] child2 = new int[parent1.length];
 
         for (int i = 0; i < crossover; i++){
             child1[i] = parent1[i];
-            child2[i] = parent2[i];
         }
 
         for (int i = crossover; i < parent1.length; i++){
             child1[i] = parent2[i];
-            child2[i] = parent1[i];
         }
 
 
-        return new int[][] {child1, child2};
+        return child1;
     }
 
     public int[] mutateGenoType(int[] geno){
@@ -309,6 +303,6 @@ public class BGA {
         reader.close();
 
         mutationRate =(float) 1 / schedules.length;
-        mutationRate = 0.01f;
+        mutationRate = 0.5f;
     }
 }

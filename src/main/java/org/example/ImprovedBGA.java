@@ -31,6 +31,11 @@ public class ImprovedBGA extends  BGA{
 
         List<int[]> finalPop = iBGA.runBGA(initialPop, 0.9f, 1f, 30);
 
+        /*
+        The heuristic improvement algorithm is very expensive so generations must be reduced from 100s to 10s,
+        however it finds very good solutions incredibly quickly.
+         */
+
         System.out.println("Number of violations " + iBGA.numViolations(iBGA.constructMatrixFromGeno(finalPop.get(0))));
         System.out.println("Cost of final " + iBGA.fitness(finalPop.get(0)));
         System.out.println("Final solution " + iBGA.genoToPheno(finalPop.get(0)));
@@ -38,7 +43,7 @@ public class ImprovedBGA extends  BGA{
     }
 
     public ImprovedBGA() throws IOException {
-        String file1 = "/sppnw43.txt";
+        String file1 = "/sppnw42.txt";
 
         super.readFile(file1);
         System.out.println(super.rows);

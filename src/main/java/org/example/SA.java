@@ -19,7 +19,7 @@ public class SA {
     public static void main(String[] args) throws IOException {
         System.out.println("Simulated annealing");
 
-        String file1 = "/sppnw41.txt";
+        String file1 = "/sppnw42.txt";
 
         SA sa = new SA();
 

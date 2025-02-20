@@ -11,8 +11,7 @@
   <component name="ChangeListManager">
     <list default="true" id="d9d02585-cd99-4041-9962-e633c04f3e0d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/BGA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/BGA.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/SA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/SA.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/ImprovedBGA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/ImprovedBGA.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,9 +67,22 @@
       <recent name="G:\AircrewSchedulingJava\src\main\resources" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.BGA">
+  <component name="RunManager" selected="Application.ImprovedBGA">
     <configuration name="BGA" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.example.BGA" />
+      <module name="AircrewSchedulingJava" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ImprovedBGA" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.example.ImprovedBGA" />
       <module name="AircrewSchedulingJava" />
       <extension name="coverage">
         <pattern>
@@ -97,8 +109,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.BGA" />
+        <item itemvalue="Application.ImprovedBGA" />
         <item itemvalue="Application.SA" />
+        <item itemvalue="Application.BGA" />
       </list>
     </recent_temporary>
   </component>
@@ -118,7 +131,7 @@
       <workItem from="1739973600513" duration="3735000" />
       <workItem from="1739980231625" duration="17000" />
       <workItem from="1740002128917" duration="9406000" />
-      <workItem from="1740043971917" duration="16719000" />
+      <workItem from="1740043971917" duration="21646000" />
     </task>
     <servers />
   </component>

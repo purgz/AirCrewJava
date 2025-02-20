@@ -43,7 +43,7 @@ public class BGA {
             initpopulation.add(bga.randomPheno());
         }
 
-        List<int[]> finalPop = bga.runBGA(initpopulation, 0.9f, 0.8f);    // for file 2 and 1
+        List<int[]> finalPop = bga.runBGA(initpopulation, 0.9f, 0.8f, 2000);    // for file 2 and 1
        // List<int[]> finalPop = bga.runBGA(initpopulation, 0.75f, 0.6f);   // for file 3
 
 
@@ -85,10 +85,8 @@ public class BGA {
         }
     }
 
-    public List<int[]> runBGA(List<int[]> population, float crossoverRate, float crossoverTypeRate){
+    public List<int[]> runBGA(List<int[]> population, float crossoverRate, float crossoverTypeRate, int maxIter){
 
-        // Soft limit
-        int maxIter = 2000;
 
         int popSize = population.size();
         int parentSize = popSize / 2;

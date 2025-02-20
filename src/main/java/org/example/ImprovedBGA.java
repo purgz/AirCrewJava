@@ -15,14 +15,18 @@ public class ImprovedBGA extends  BGA{
         List<int[]> initialPop = iBGA.pseudoRandomInit(200);
         //System.out.println(initialPop);
 
-       // iBGA.heuristicImprovement(initialPop.get(0));
 
-        for (int i = 0; i < initialPop.get(2).length; i++){
-            if (initialPop.get(5)[i] == 1){
+        int[] child = iBGA.heuristicImprovement(initialPop.get(0));
+
+
+        System.out.println("*********");
+        for (int i = 0; i < initialPop.get(0).length; i++){
+            if (initialPop.get(0)[i] == 1){
                 System.out.println(i);
                 System.out.println(iBGA.schedules[i]);
             }
         }
+        System.out.println("************");
 
         List<int[]> finalPop = iBGA.runBGA(initialPop, 0.9f, 1f, 2000);
 
@@ -33,7 +37,7 @@ public class ImprovedBGA extends  BGA{
     }
 
     public ImprovedBGA() throws IOException {
-        String file1 = "/sppnw43.txt";
+        String file1 = "/sppnw42.txt";
 
         super.readFile(file1);
         System.out.println(super.rows);
@@ -45,14 +49,17 @@ public class ImprovedBGA extends  BGA{
     // Heuristic improvement operator from paper 1
     public int[] heuristicImprovement(int[] child){
 
-        List<Integer> colsInSolution = new ArrayList<>();
+        // DROP procedure
+        // Identify over covered rows, randomly remove until all rows covered by at most 1 column
+        List<Integer> colsInSolutionIndex = new ArrayList<>();
         for (int i = 0; i < child.length; i++){
             if (child[i] == 1){
-                colsInSolution.add(i);
+                colsInSolutionIndex.add(i);
             }
         }
         // T in paper
-        List<Integer> colsTemp = new ArrayList<>(colsInSolution);
+
+        List<Integer> colsTemp = new ArrayList<>(colsInSolutionIndex);
         while(colsTemp.size() > 0){
 
             // Randomly select a column j, in T
@@ -63,18 +70,30 @@ public class ImprovedBGA extends  BGA{
             //Find rows covered by j
             List<Integer> rowsCoveredByJ = new ArrayList<>();
             for (int i = 1; i < randomCol.size(); i++){
-                rowsCoveredByJ.add(i);
+                rowsCoveredByJ.add(randomCol.get(i));
             }
 
-            System.out.println(rowsCoveredByJ);
+
+            for (int row : rowsCoveredByJ){
+                // If number of cols in S covering this row is >= 2 then remove J from the solution
+                int w_i = 0;
+                for (int col : colsInSolutionIndex){
+                    if (schedules[col].subList(1, schedules[col].size()).contains(row)){
+                        w_i++;
+                    }
+                }
+                if (w_i >= 2){
+                    // Remove column J from s
+                    colsInSolutionIndex.remove(randT);
+                }
+            }
 
         }
 
-        // DROP procedure
-        // Identify over covered rows, randomly remove until all rows covered by at most 1 column
 
+        // ADD procedure
 
-        return null;
+        return phenoToGeno(colsInSolutionIndex);
     }
 
 

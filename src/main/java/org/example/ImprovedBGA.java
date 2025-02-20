@@ -17,7 +17,8 @@ public class ImprovedBGA extends  BGA{
 
 
         int[] child = iBGA.heuristicImprovement(initialPop.get(0));
-
+        System.out.println(iBGA.genoToPheno(initialPop.get(0)));
+        System.out.println(iBGA.genoToPheno(child));
 
         System.out.println("*********");
         for (int i = 0; i < initialPop.get(0).length; i++){
@@ -28,7 +29,7 @@ public class ImprovedBGA extends  BGA{
         }
         System.out.println("************");
 
-        List<int[]> finalPop = iBGA.runBGA(initialPop, 0.9f, 1f, 2000);
+        List<int[]> finalPop = iBGA.runBGA(initialPop, 0.9f, 1f, 30);
 
         System.out.println("Number of violations " + iBGA.numViolations(iBGA.constructMatrixFromGeno(finalPop.get(0))));
         System.out.println("Cost of final " + iBGA.fitness(finalPop.get(0)));
@@ -37,7 +38,7 @@ public class ImprovedBGA extends  BGA{
     }
 
     public ImprovedBGA() throws IOException {
-        String file1 = "/sppnw42.txt";
+        String file1 = "/sppnw43.txt";
 
         super.readFile(file1);
         System.out.println(super.rows);
@@ -47,6 +48,7 @@ public class ImprovedBGA extends  BGA{
 
 
     // Heuristic improvement operator from paper 1
+    // This thing is a miracle worker
     public int[] heuristicImprovement(int[] child){
 
         // DROP procedure
@@ -65,7 +67,10 @@ public class ImprovedBGA extends  BGA{
             // Randomly select a column j, in T
             int randT = rand.nextInt(colsTemp.size());
             List<Integer> randomCol = schedules[colsTemp.get(randT)];
+            int selectedCol = colsTemp.get(randT);
+
             colsTemp.remove(randT); //Remove from T
+
 
             //Find rows covered by j
             List<Integer> rowsCoveredByJ = new ArrayList<>();
@@ -84,14 +89,66 @@ public class ImprovedBGA extends  BGA{
                 }
                 if (w_i >= 2){
                     // Remove column J from s
-                    colsInSolutionIndex.remove(randT);
+                    colsInSolutionIndex.remove(Integer.valueOf(selectedCol));
                 }
             }
+
 
         }
 
 
         // ADD procedure
+        // Find uncovered rows - U
+        List<Integer> uncoveredRows = new ArrayList<>();
+        for (int i = 1; i <= rows; i++){
+            uncoveredRows.add(i);
+        }
+        for (Integer i : colsInSolutionIndex){
+            uncoveredRows.removeAll(schedules[i].subList(1, schedules[i].size()));
+        }
+
+        List<Integer> dummy = new ArrayList<>(uncoveredRows);
+
+        while (dummy.size() > 0){
+            // Randomly select a row in V
+            int r = rand.nextInt(dummy.size());
+            int selectedRow = dummy.get(r);
+            dummy.remove(r);
+
+
+            // Search for new column with rows as subset of Uncovered rows U,  and minimises c / {num covered}
+            List<Integer> columnsToCheck = new ArrayList<>();
+            for (int i = 0; i < schedules.length; i++){
+                if (colsInSolutionIndex.contains(i)){
+                    continue;
+                }
+                // Check if rows covered is a subset - can use containsAll method
+                if (schedules[i].subList(1,schedules[i].size()).contains(selectedRow) && new HashSet<>(uncoveredRows).containsAll(schedules[i].subList(1, schedules[i].size()))){
+                    columnsToCheck.add(i);
+                }
+
+                if (columnsToCheck.size() != 0){
+
+                    // sort by cost / rows covered
+                    int greedyChoice = 0;
+                    float minSoFar = Float.MAX_VALUE;
+                    for (int j = 0; j < columnsToCheck.size(); j++){
+                        float bj = (float) schedules[columnsToCheck.get(j)].size() - 1;
+                        float cj = schedules[columnsToCheck.get(j)].get(0);
+                        if ((bj / cj) < minSoFar){
+                            minSoFar = bj / cj;
+                            greedyChoice = columnsToCheck.get(j);
+                        }
+                    }
+
+                    // Add to solution
+                    colsInSolutionIndex.add(greedyChoice);
+                    // Remove all the new covered rows from dummy and uncovered rows
+                    uncoveredRows.removeAll(schedules[greedyChoice].subList(1,schedules[greedyChoice].size()));
+                    dummy.removeAll(schedules[greedyChoice].subList(1,schedules[greedyChoice].size()));
+                }
+            }
+        }
 
         return phenoToGeno(colsInSolutionIndex);
     }
@@ -139,7 +196,7 @@ public class ImprovedBGA extends  BGA{
             List<int[]> newPopulation = new ArrayList<>();
 
 
-            if (i % 100 == 0){
+            if (i % 20 == 0){
                 System.out.println("Best at " + i + " " + fitness(population.get(0)));
                 System.out.println("Best so far " + bestCost);
                 //System.out.println("Current mutation rate " + mutationRate);
@@ -209,6 +266,11 @@ public class ImprovedBGA extends  BGA{
 
                 // Mutate the new child
                 child = mutateGenoType(child);
+
+                // RUN THE heuristic improvement operator
+                child = heuristicImprovement(child);
+
+
                 newPopulation.add(child);
             }
 

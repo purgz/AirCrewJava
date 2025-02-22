@@ -13,7 +13,7 @@ public class ImprovedBGA extends  BGA{
 
         String fileOption = ""; // either 1 2 or 3
 
-        int numRunsForAverage = 30;
+        int numRunsForAverage = 5;
 
         boolean runFromCmd = false;
         if (args.length > 0){
@@ -32,36 +32,6 @@ public class ImprovedBGA extends  BGA{
             }
         }
 
-//
-//        ImprovedBGA iBGA = new ImprovedBGA("/sppnw42.txt");
-//
-//        List<int[]> initialPop = iBGA.pseudoRandomInit(50);
-        //System.out.println(initialPop);
-
-
-//        int[] child = iBGA.heuristicImprovement(initialPop.get(0));
-//        System.out.println(iBGA.genoToPheno(initialPop.get(0)));
-//        System.out.println(iBGA.genoToPheno(child));
-//
-//        System.out.println("*********");
-//        for (int i = 0; i < initialPop.get(0).length; i++){
-//            if (initialPop.get(0)[i] == 1){
-//                System.out.println(i);
-//                System.out.println(iBGA.schedules[i]);
-//            }
-//        }
-//        System.out.println("************");
-
-//        List<int[]> finalPop = iBGA.runBGA(initialPop, 0.9f, 1f, 30);
-
-        /*
-        The heuristic improvement algorithm is very expensive so generations must be reduced from 100s to 10s,
-        however it finds very good solutions incredibly quickly.
-         */
-
-//        System.out.println("Number of violations " + iBGA.numViolations(iBGA.constructMatrixFromGeno(finalPop.get(0))));
-//        System.out.println("Cost of final " + iBGA.fitness(finalPop.get(0)));
-//        System.out.println("Final solution " + iBGA.genoToPheno(finalPop.get(0)));
 
         // Run 30 times for each file and get average
         String file1 = "/sppnw41.txt";
@@ -69,6 +39,8 @@ public class ImprovedBGA extends  BGA{
         String file3 = "/sppnw43.txt";
 
         String fileToRun = file1;
+
+        System.out.println("Running improved binary genetic algorithm (paper 1) on " + fileToRun);
 
         if (runFromCmd){
             if (fileOption.equals("1")){
@@ -83,16 +55,35 @@ public class ImprovedBGA extends  BGA{
 
         List<List<Double>> allBestHistory  = new ArrayList<>();
         List<List<Double>> allAllHistory = new ArrayList<>();
+        List<Float> bestForEach = new ArrayList<>();
         System.out.println("Running with file: " + fileToRun + " for " + numRunsForAverage + " iterations");
         for (int i = 0; i < numRunsForAverage; i++){
             System.out.println("Iteration " + (i + 1) + " of " + numRunsForAverage);
             ImprovedBGA ibgaFile1 = new ImprovedBGA(fileToRun);
             List<int[]> initialPop = ibgaFile1.pseudoRandomInit(50);
             List<int[]> finalPop = ibgaFile1.runBGA(initialPop, 0.9f, 1f, 30);
-
+            bestForEach.add(ibgaFile1.fitness(finalPop.get(0)));
             allBestHistory.add(ibgaFile1.bestHistory);
             allAllHistory.add(ibgaFile1.allHistory);
         }
+
+        // Calculate standard deviation and mean
+
+        double mean = 0d;
+        double standardDeviation = 0d;
+
+        for (int i = 0; i < bestForEach.size(); i++){
+            mean += bestForEach.get(i);
+        }
+        mean = mean / bestForEach.size();
+
+        for (int i = 0; i < bestForEach.size(); i++){
+            standardDeviation += Math.pow(bestForEach.get(i) - mean, 2);
+        }
+        standardDeviation =  Math.sqrt(standardDeviation/ bestForEach.size());
+
+        System.out.println("Mean of best final results: " + mean);
+        System.out.println("Standard deviation of final results " + standardDeviation);
 
 
         System.out.println("Producing plot of best and all history for " + fileToRun);
@@ -121,10 +112,6 @@ public class ImprovedBGA extends  BGA{
         super.readFile(fileName);
         System.out.println(super.rows);
         System.out.println(super.cols);
-    }
-
-    public void average30(){
-
     }
 
 

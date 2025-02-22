@@ -11,6 +11,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d9d02585-cd99-4041-9962-e633c04f3e0d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/BGA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/BGA.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/ImprovedBGA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/ImprovedBGA.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -67,7 +69,7 @@
       <recent name="G:\AircrewSchedulingJava\src\main\resources" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ImprovedBGA">
+  <component name="RunManager" selected="Application.BGA">
     <configuration name="BGA" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.example.BGA" />
       <module name="AircrewSchedulingJava" />
@@ -109,9 +111,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.BGA" />
         <item itemvalue="Application.ImprovedBGA" />
         <item itemvalue="Application.SA" />
-        <item itemvalue="Application.BGA" />
       </list>
     </recent_temporary>
   </component>
@@ -135,7 +137,7 @@
       <workItem from="1740078338700" duration="3757000" />
       <workItem from="1740084103152" duration="81000" />
       <workItem from="1740084198027" duration="272000" />
-      <workItem from="1740234825007" duration="4062000" />
+      <workItem from="1740234825007" duration="5035000" />
     </task>
     <servers />
   </component>

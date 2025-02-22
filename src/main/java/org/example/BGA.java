@@ -27,51 +27,119 @@ public class BGA {
 
     public static void main(String[] args) throws IOException {
 
-        // Please excuse the duplicated code from SA file, it seemed easier this way
 
-        String file1 = "/sppnw42.txt";
+        String fileOption = ""; // either 1 2 or 3
 
-        BGA bga = new BGA();
+        int numRunsForAverage = 5;
 
-        bga.readFile(file1);
+        boolean runFromCmd = false;
+        if (args.length > 0){
+            fileOption = args[0];
+            runFromCmd = true;
 
-
-
-        List<int[]> initpopulation = new ArrayList<>();
-        // random pop of length 200
-        for (int i = 0; i < 200; i++){
-            initpopulation.add(bga.randomPheno());
+            if (args.length > 1){
+                // If an extra argument is supplied use it for the number of runs
+                numRunsForAverage = Integer.parseInt(args[1]);
+            }
         }
 
-        List<int[]> finalPop = bga.runBGA(initpopulation, 0.9f, 0.8f, 2000);    // for file 2 and 1
-       // List<int[]> finalPop = bga.runBGA(initpopulation, 0.75f, 0.6f);   // for file 3
-
-
-        // PRODUCE DATA AND STANDARD DEVIATION FOR ALL 3 on 30 runs.
-
-
-
-        System.out.println("Number of violations " + bga.numViolations(bga.constructMatrixFromGeno(finalPop.get(0))));
-        System.out.println("Cost of final " + bga.fitness(finalPop.get(0)));
-        System.out.println("Final solution " + bga.genoToPheno(finalPop.get(0)));
-
-        double[] h = new double[bga.bestHistory.size()];
-        double[] g = new double[bga.bestHistory.size()];
-        for (int i = 0; i < bga.bestHistory.size(); i++){
-            h[i] = bga.bestHistory.get(i);
-            g[i] = bga.allHistory.get(i);
+        if (!(fileOption.equals("1") || fileOption.equals("2") || fileOption.equals("3"))){
+            if (runFromCmd){
+                System.out.println("Invalid argument");
+            }
         }
 
 
+        // Run 30 times for each file and get average
+        String file1 = "/sppnw41.txt";
+        String file2 = "/sppnw42.txt";
+        String file3 = "/sppnw43.txt";
+
+        String fileToRun = file2;
+
+        System.out.println("Running simple genetic binary algorithm on " + fileToRun);
+
+
+        if (runFromCmd){
+            if (fileOption.equals("1")){
+                fileToRun = file1;
+            } else if (fileOption.equals("2")){
+                fileToRun = file2;
+            } else if (fileOption.equals("3")){
+                fileToRun = file3;
+            }
+
+        }
+
+        List<List<Double>> allBestHistory  = new ArrayList<>();
+        List<List<Double>> allAllHistory = new ArrayList<>();
+        List<Float> bestForEach = new ArrayList<>();
+        System.out.println("Running with file: " + fileToRun + " for " + numRunsForAverage + " iterations");
+        for (int i = 0; i < numRunsForAverage; i++){
+            System.out.println("Iteration " + (i + 1) + " of " + numRunsForAverage);
+            BGA bga = new BGA(fileToRun);
+
+            List<int[]> initialPop = bga.randomPopInit(200);
+            List<int[]> finalPop = bga.runBGA(initialPop, 0.9f, 1f, 1000);
+            bestForEach.add(bga.fitness(finalPop.get(0)));
+            allBestHistory.add(bga.bestHistory);
+            allAllHistory.add(bga.allHistory);
+        }
+
+        // Calculate standard deviation and mean
+
+        double mean = 0d;
+        double standardDeviation = 0d;
+
+        for (int i = 0; i < bestForEach.size(); i++){
+            mean += bestForEach.get(i);
+        }
+        mean = mean / bestForEach.size();
+
+        for (int i = 0; i < bestForEach.size(); i++){
+            standardDeviation += Math.pow(bestForEach.get(i) - mean, 2);
+        }
+        standardDeviation =  Math.sqrt(standardDeviation/ bestForEach.size());
+
+        System.out.println("Mean of best final results: " + mean);
+        System.out.println("Standard deviation of final results " + standardDeviation);
+
+
+        System.out.println("Producing plot of best and all history for " + fileToRun);
         Plot2DPanel plot = new Plot2DPanel();
-        plot.addLinePlot("Best cost history",  h);
-        plot.addLinePlot("Cost history", g);
+
+        for (int i = 0; i < allBestHistory.size(); i++){
+            double[] h = new double[allBestHistory.get(i).size()];
+            double[] g = new double[allBestHistory.get(i).size()];
+            for (int j = 0; j < allBestHistory.get(i).size(); j++){
+                h[j] = allBestHistory.get(i).get(j);
+                g[j] = allAllHistory.get(i).get(j);
+            }
+            plot.addLinePlot("Best cost history for "+i+"th run of "  + numRunsForAverage,  h);
+            //plot.addLinePlot("Cost history", g);
+        }
+        // maybe plot only best history to reduce clutter
         plot.addLegend("NORTH");
         JFrame frame = new JFrame("Plot panel");
         frame.setSize(800,800);
         frame.setContentPane(plot);
         frame.setVisible(true);
+    }
 
+    public BGA(String fileName) throws IOException {
+        readFile(fileName);
+        System.out.println(rows);
+        System.out.println(cols);
+    }
+
+
+    public List<int[]> randomPopInit(int populationSize) {
+
+        List<int[]> population = new ArrayList<>();
+        for (int i = 0; i < populationSize; i++){
+            population.add(randomPheno());
+        }
+        return population;
     }
 
     // SORT SMALLEST TO LARGEST

@@ -1,5 +1,8 @@
 package org.example;
 
+import org.math.plot.Plot2DPanel;
+
+import javax.swing.*;
 import java.io.IOException;
 import java.util.*;
 
@@ -12,7 +15,7 @@ public class ImprovedBGA extends  BGA{
 
         ImprovedBGA iBGA = new ImprovedBGA();
 
-        List<int[]> initialPop = iBGA.pseudoRandomInit(200);
+        List<int[]> initialPop = iBGA.pseudoRandomInit(50);
         //System.out.println(initialPop);
 
 
@@ -39,6 +42,24 @@ public class ImprovedBGA extends  BGA{
         System.out.println("Number of violations " + iBGA.numViolations(iBGA.constructMatrixFromGeno(finalPop.get(0))));
         System.out.println("Cost of final " + iBGA.fitness(finalPop.get(0)));
         System.out.println("Final solution " + iBGA.genoToPheno(finalPop.get(0)));
+
+        double[] h = new double[iBGA.bestHistory.size()];
+        double[] g = new double[iBGA.bestHistory.size()];
+        for (int i = 0; i < iBGA.bestHistory.size(); i++){
+            h[i] = iBGA.bestHistory.get(i);
+            g[i] = iBGA.allHistory.get(i);
+        }
+
+
+        Plot2DPanel plot = new Plot2DPanel();
+        plot.addLinePlot("Best cost history",  h);
+        plot.addLinePlot("Cost history", g);
+        plot.addLegend("NORTH");
+        JFrame frame = new JFrame("Plot panel");
+        frame.setSize(800,800);
+        frame.setContentPane(plot);
+        frame.setVisible(true);
+
 
     }
 
@@ -158,8 +179,61 @@ public class ImprovedBGA extends  BGA{
         return phenoToGeno(colsInSolutionIndex);
     }
 
+    public float fitnessWithoutViolations(int[] genotype){
+        int total = 0;
+        int[][] constraints = constructMatrixFromGeno(genotype);
+
+        for (int i = 0; i < genotype.length; i++){
+            if (genotype[i] == 1){
+                total += schedules[i].get(0);
+            }
+        }
+        return total;
+    }
+
+
+    public List<int[]> stochasticRanking(List<int[]> population){
+
+        List<int[]> sorted = new ArrayList<>(population);
+
+        int numSwaps = 1;
+        // While no more change in ranking
+        double pf = 0.25;
+        while (numSwaps > 0){
+           // System.out.println(numSwaps);
+            numSwaps = 0;
+
+            for (int i = 0; i < sorted.size() - 1; i++){
+                int v1 = numViolations(constructMatrixFromGeno(sorted.get(i)));
+                int v2 = numViolations(constructMatrixFromGeno(sorted.get(i+1)));
+                double u = Math.random();
+                if (v1 == 0 && v2 == 0 || u < pf){
+                    if (fitnessWithoutViolations(sorted.get(i)) > fitnessWithoutViolations(sorted.get(i+1))){
+                        // Swap i and i + 1
+                        int[] tmp = sorted.get(i);
+                        sorted.set(i, sorted.get(i+1));
+                        sorted.set(i + 1, tmp);
+                        numSwaps++;
+                    }
+                } else {
+                    // Swap if G is less
+                    if (v1 > v2){
+                        int[] tmp = sorted.get(i);
+                        sorted.set(i, sorted.get(i+1));
+                        sorted.set(i + 1, tmp);
+                        numSwaps++;
+                    }
+                }
+
+            }
+        }
+        return sorted;
+    }
+
 
     // Overriding run method
+    // This now includes the stochastic ranking method instead of sorting by cost
+    // Also includes heuristic operator applied on each offspring.
     public List<int[]> runBGA(List<int[]> population, float crossoverRate, float crossoverTypeRate, int maxIter){
 
 
@@ -170,7 +244,9 @@ public class ImprovedBGA extends  BGA{
         PopulationComparator comparator = new PopulationComparator();
 
         // EVALUATE FITNESS
-        population.sort(comparator);
+        // Implement stochastic ranking
+        //population.sort(comparator);
+        population = stochasticRanking(population);
 
         float bestCost = 1000000f;
 
@@ -201,7 +277,7 @@ public class ImprovedBGA extends  BGA{
             List<int[]> newPopulation = new ArrayList<>();
 
 
-            if (i % 20 == 0){
+            if (i % 1 == 0){
                 System.out.println("Best at " + i + " " + fitness(population.get(0)));
                 System.out.println("Best so far " + bestCost);
                 //System.out.println("Current mutation rate " + mutationRate);
@@ -280,7 +356,9 @@ public class ImprovedBGA extends  BGA{
             }
 
             // Sort based on fitness
-            newPopulation.sort(comparator);
+            //newPopulation.sort(comparator);
+            // Using the stochastic sorting instead
+            newPopulation = stochasticRanking(newPopulation);
 
             // Update population
             population = newPopulation;

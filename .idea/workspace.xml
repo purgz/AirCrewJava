@@ -12,6 +12,7 @@
     <list default="true" id="d9d02585-cd99-4041-9962-e633c04f3e0d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/ImprovedBGA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/ImprovedBGA.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,7 +136,7 @@
       <workItem from="1740078338700" duration="3757000" />
       <workItem from="1740084103152" duration="81000" />
       <workItem from="1740084198027" duration="272000" />
-      <workItem from="1740234825007" duration="1788000" />
+      <workItem from="1740234825007" duration="3636000" />
     </task>
     <servers />
   </component>

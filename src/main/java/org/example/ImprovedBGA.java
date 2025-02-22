@@ -11,66 +11,113 @@ public class ImprovedBGA extends  BGA{
 
     public static void main(String[] args) throws IOException {
 
+        String fileOption = ""; // either 1 2 or 3
+        boolean runFromCmd = false;
+        if (args.length > 0){
+            fileOption = args[0];
+            runFromCmd = true;
+        }
 
+        if (!(fileOption.equals("1") || fileOption.equals("2") || fileOption.equals("3"))){
+            if (runFromCmd){
+                System.out.println("Invalid argument");
+            }
+        }
 
-        ImprovedBGA iBGA = new ImprovedBGA();
-
-        List<int[]> initialPop = iBGA.pseudoRandomInit(50);
+//
+//        ImprovedBGA iBGA = new ImprovedBGA("/sppnw42.txt");
+//
+//        List<int[]> initialPop = iBGA.pseudoRandomInit(50);
         //System.out.println(initialPop);
 
 
-        int[] child = iBGA.heuristicImprovement(initialPop.get(0));
-        System.out.println(iBGA.genoToPheno(initialPop.get(0)));
-        System.out.println(iBGA.genoToPheno(child));
+//        int[] child = iBGA.heuristicImprovement(initialPop.get(0));
+//        System.out.println(iBGA.genoToPheno(initialPop.get(0)));
+//        System.out.println(iBGA.genoToPheno(child));
+//
+//        System.out.println("*********");
+//        for (int i = 0; i < initialPop.get(0).length; i++){
+//            if (initialPop.get(0)[i] == 1){
+//                System.out.println(i);
+//                System.out.println(iBGA.schedules[i]);
+//            }
+//        }
+//        System.out.println("************");
 
-        System.out.println("*********");
-        for (int i = 0; i < initialPop.get(0).length; i++){
-            if (initialPop.get(0)[i] == 1){
-                System.out.println(i);
-                System.out.println(iBGA.schedules[i]);
-            }
-        }
-        System.out.println("************");
-
-        List<int[]> finalPop = iBGA.runBGA(initialPop, 0.9f, 1f, 30);
+//        List<int[]> finalPop = iBGA.runBGA(initialPop, 0.9f, 1f, 30);
 
         /*
         The heuristic improvement algorithm is very expensive so generations must be reduced from 100s to 10s,
         however it finds very good solutions incredibly quickly.
          */
 
-        System.out.println("Number of violations " + iBGA.numViolations(iBGA.constructMatrixFromGeno(finalPop.get(0))));
-        System.out.println("Cost of final " + iBGA.fitness(finalPop.get(0)));
-        System.out.println("Final solution " + iBGA.genoToPheno(finalPop.get(0)));
+//        System.out.println("Number of violations " + iBGA.numViolations(iBGA.constructMatrixFromGeno(finalPop.get(0))));
+//        System.out.println("Cost of final " + iBGA.fitness(finalPop.get(0)));
+//        System.out.println("Final solution " + iBGA.genoToPheno(finalPop.get(0)));
 
-        double[] h = new double[iBGA.bestHistory.size()];
-        double[] g = new double[iBGA.bestHistory.size()];
-        for (int i = 0; i < iBGA.bestHistory.size(); i++){
-            h[i] = iBGA.bestHistory.get(i);
-            g[i] = iBGA.allHistory.get(i);
+        // Run 30 times for each file and get average
+        String file1 = "/sppnw41.txt";
+        String file2 = "/sppnw42.txt";
+        String file3 = "/sppnw43.txt";
+
+        ImprovedBGA ibgaFile2 = new ImprovedBGA(file2);
+        ImprovedBGA imgaFile3 = new ImprovedBGA(file3);
+
+        String fileToRun = file1;
+
+        if (runFromCmd){
+            if (fileOption.equals("1")){
+                fileToRun = file1;
+            } else if (fileOption.equals("2")){
+                fileToRun = file2;
+            } else if (fileOption.equals("3")){
+                fileToRun = file3;
+            }
+
         }
 
+        List<List<Double>> allBestHistory  = new ArrayList<>();
+        List<List<Double>> allAllHistory = new ArrayList<>();
+        for (int i = 0; i < 30; i++){
+            System.out.println("Iteration " + (i + 1) + " of 30");
+            ImprovedBGA ibgaFile1 = new ImprovedBGA(fileToRun);
+            List<int[]> initialPop = ibgaFile1.pseudoRandomInit(50);
+            List<int[]> finalPop = ibgaFile1.runBGA(initialPop, 0.9f, 1f, 30);
+
+            allBestHistory.add(ibgaFile1.bestHistory);
+            allAllHistory.add(ibgaFile1.allHistory);
+        }
 
         Plot2DPanel plot = new Plot2DPanel();
-        plot.addLinePlot("Best cost history",  h);
-        plot.addLinePlot("Cost history", g);
+
+        for (int i = 0; i < allBestHistory.size(); i++){
+            double[] h = new double[allBestHistory.get(i).size()];
+            double[] g = new double[allBestHistory.get(i).size()];
+            for (int j = 0; j < allBestHistory.get(i).size(); j++){
+                h[j] = allBestHistory.get(i).get(j);
+                g[j] = allAllHistory.get(i).get(j);
+            }
+            plot.addLinePlot("Best cost history for 5th run of 30",  h);
+            plot.addLinePlot("Cost history", g);
+        }
+
         plot.addLegend("NORTH");
         JFrame frame = new JFrame("Plot panel");
         frame.setSize(800,800);
         frame.setContentPane(plot);
         frame.setVisible(true);
-
-
     }
 
-    public ImprovedBGA() throws IOException {
-        String file1 = "/sppnw42.txt";
+    public ImprovedBGA(String fileName) throws IOException {
 
-        super.readFile(file1);
+        super.readFile(fileName);
         System.out.println(super.rows);
         System.out.println(super.cols);
     }
 
+    public void average30(){
+
+    }
 
 
     // Heuristic improvement operator from paper 1
@@ -277,7 +324,7 @@ public class ImprovedBGA extends  BGA{
             List<int[]> newPopulation = new ArrayList<>();
 
 
-            if (i % 1 == 0){
+            if (i % 10 == 0){
                 System.out.println("Best at " + i + " " + fitness(population.get(0)));
                 System.out.println("Best so far " + bestCost);
                 //System.out.println("Current mutation rate " + mutationRate);

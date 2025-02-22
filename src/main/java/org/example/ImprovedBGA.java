@@ -12,10 +12,18 @@ public class ImprovedBGA extends  BGA{
     public static void main(String[] args) throws IOException {
 
         String fileOption = ""; // either 1 2 or 3
+
+        int numRunsForAverage = 30;
+
         boolean runFromCmd = false;
         if (args.length > 0){
             fileOption = args[0];
             runFromCmd = true;
+
+            if (args.length > 1){
+                // If an extra argument is supplied use it for the number of runs
+                numRunsForAverage = Integer.parseInt(args[1]);
+            }
         }
 
         if (!(fileOption.equals("1") || fileOption.equals("2") || fileOption.equals("3"))){
@@ -60,9 +68,6 @@ public class ImprovedBGA extends  BGA{
         String file2 = "/sppnw42.txt";
         String file3 = "/sppnw43.txt";
 
-        ImprovedBGA ibgaFile2 = new ImprovedBGA(file2);
-        ImprovedBGA imgaFile3 = new ImprovedBGA(file3);
-
         String fileToRun = file1;
 
         if (runFromCmd){
@@ -78,8 +83,9 @@ public class ImprovedBGA extends  BGA{
 
         List<List<Double>> allBestHistory  = new ArrayList<>();
         List<List<Double>> allAllHistory = new ArrayList<>();
-        for (int i = 0; i < 30; i++){
-            System.out.println("Iteration " + (i + 1) + " of 30");
+        System.out.println("Running with file: " + fileToRun + " for " + numRunsForAverage + " iterations");
+        for (int i = 0; i < numRunsForAverage; i++){
+            System.out.println("Iteration " + (i + 1) + " of " + numRunsForAverage);
             ImprovedBGA ibgaFile1 = new ImprovedBGA(fileToRun);
             List<int[]> initialPop = ibgaFile1.pseudoRandomInit(50);
             List<int[]> finalPop = ibgaFile1.runBGA(initialPop, 0.9f, 1f, 30);
@@ -88,6 +94,8 @@ public class ImprovedBGA extends  BGA{
             allAllHistory.add(ibgaFile1.allHistory);
         }
 
+
+        System.out.println("Producing plot of best and all history for " + fileToRun);
         Plot2DPanel plot = new Plot2DPanel();
 
         for (int i = 0; i < allBestHistory.size(); i++){
@@ -97,10 +105,10 @@ public class ImprovedBGA extends  BGA{
                 h[j] = allBestHistory.get(i).get(j);
                 g[j] = allAllHistory.get(i).get(j);
             }
-            plot.addLinePlot("Best cost history for 5th run of 30",  h);
-            plot.addLinePlot("Cost history", g);
+            plot.addLinePlot("Best cost history for "+i+"th run of "  + numRunsForAverage,  h);
+            //plot.addLinePlot("Cost history", g);
         }
-
+        // maybe plot only best history to reduce clutter
         plot.addLegend("NORTH");
         JFrame frame = new JFrame("Plot panel");
         frame.setSize(800,800);

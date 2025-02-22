@@ -1,9 +1,9 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="AircrewSchedulingJava:SA">
-    <output-path>$PROJECT_DIR$/out/artifacts/AircrewSchedulingJava_SA</output-path>
+  <artifact type="jar" name="AircrewSchedulingJava:IBGA">
+    <output-path>$PROJECT_DIR$/out/artifacts/AircrewSchedulingJava_IBGA</output-path>
     <root id="archive" name="AircrewSchedulingJava.jar">
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/SA/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/IBGA/META-INF/MANIFEST.MF" />
       </element>
       <element id="module-output" name="AircrewSchedulingJava" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/yannrichet/JMathPlot/1.0.1/JMathPlot-1.0.1.jar" path-in-jar="/" />

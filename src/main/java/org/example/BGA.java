@@ -80,10 +80,13 @@ public class BGA {
             BGA bga = new BGA(fileToRun);
 
             List<int[]> initialPop = bga.randomPopInit(200);
-            List<int[]> finalPop = bga.runBGA(initialPop, 0.9f, 1f, 1000);
+            // Decide whether or not to enforce feasible solutions for this one since its slow
+            List<int[]> finalPop = bga.runBGA(initialPop, 0.9f, 1f, 100);
             bestForEach.add(bga.fitness(finalPop.get(0)));
             allBestHistory.add(bga.bestHistory);
             allAllHistory.add(bga.allHistory);
+            System.out.println("Solution found " + bga.genoToPheno(finalPop.get(0)) +
+                    " cost: " + bga.fitness(finalPop.get(0)));
         }
 
         // Calculate standard deviation and mean

@@ -65,6 +65,8 @@ public class ImprovedBGA extends  BGA{
             bestForEach.add(ibgaFile1.fitness(finalPop.get(0)));
             allBestHistory.add(ibgaFile1.bestHistory);
             allAllHistory.add(ibgaFile1.allHistory);
+            System.out.println("Solution found " + ibgaFile1.genoToPheno(finalPop.get(0)) +
+                    " cost: " + ibgaFile1.fitness(finalPop.get(0)));
         }
 
         // Calculate standard deviation and mean

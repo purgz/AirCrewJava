@@ -17,39 +17,91 @@ public class SA {
     List<Double> allHistory = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
-        System.out.println("Simulated annealing");
+        String fileOption = ""; // either 1 2 or 3
 
-        String file1 = "/sppnw42.txt";
+        int numRunsForAverage = 5;
 
-        SA sa = new SA();
+        boolean runFromCmd = false;
+        if (args.length > 0){
+            fileOption = args[0];
+            runFromCmd = true;
 
-        sa.readFile(file1);
-
-
-        List<Integer> initial = sa.greedyInit();
-
-        int[][] matrix = sa.constructMatrix(initial);
-
-        List<Integer> finalS = sa.runSA(initial);
-        System.out.println(finalS);
-        System.out.println(sa.feasible(sa.constructMatrix(finalS)));
-        System.out.println(sa.cost(finalS, sa.constructMatrix(finalS)));
-
-
-
-        double[] h = new double[sa.bestHistory.size()];
-        double[] g = new double[sa.bestHistory.size()];
-        for (int i = 0; i < sa.bestHistory.size(); i++){
-            h[i] = sa.bestHistory.get(i);
-            g[i] = sa.allHistory.get(i);
+            if (args.length > 1){
+                // If an extra argument is supplied use it for the number of runs
+                numRunsForAverage = Integer.parseInt(args[1]);
+            }
         }
 
-        //Produce graph to show ALL history on same graph could be nice
+        if (!(fileOption.equals("1") || fileOption.equals("2") || fileOption.equals("3"))){
+            if (runFromCmd){
+                System.out.println("Invalid argument");
+            }
+        }
 
+
+        // Run 30 times for each file and get average
+        String file1 = "/sppnw41.txt";
+        String file2 = "/sppnw42.txt";
+        String file3 = "/sppnw43.txt";
+
+        String fileToRun = file1;
+
+        System.out.println("Running Simulated annealing on " + fileToRun);
+
+
+
+
+        List<List<Double>> allBestHistory  = new ArrayList<>();
+        List<List<Double>> allAllHistory = new ArrayList<>();
+        List<Float> bestForEach = new ArrayList<>();
+        for (int i = 0; i < numRunsForAverage; i++){
+
+            SA sa = new SA();
+            List<Integer> initial = sa.greedyInit();
+            sa.readFile(fileToRun);
+            List<Integer> finalS = sa.runSA(initial);
+
+            allBestHistory.add(sa.bestHistory);
+            allAllHistory.add(sa.allHistory);
+            bestForEach.add(sa.cost(finalS, sa.constructMatrix(finalS)));
+            System.out.println("Solution found " + finalS + " Cost: " + sa.cost(finalS, sa.constructMatrix(finalS)));
+        }
+
+
+
+        double mean = 0d;
+        double standardDeviation = 0d;
+
+        for (int i = 0; i < bestForEach.size(); i++){
+            mean += bestForEach.get(i);
+        }
+        mean = mean / bestForEach.size();
+
+        for (int i = 0; i < bestForEach.size(); i++){
+            standardDeviation += Math.pow(bestForEach.get(i) - mean, 2);
+        }
+        standardDeviation =  Math.sqrt(standardDeviation/ bestForEach.size());
+
+        System.out.println("Mean of best final results: " + mean);
+        System.out.println("Standard deviation of final results " + standardDeviation);
+
+
+        System.out.println("Producing plot of best and all history for " + fileToRun);
         Plot2DPanel plot = new Plot2DPanel();
-        plot.addLinePlot("Best cost history",  h);
-        plot.addLinePlot("Cost history", g);
+
+        for (int i = 0; i < allBestHistory.size(); i++){
+            double[] h = new double[allBestHistory.get(i).size()];
+            double[] g = new double[allBestHistory.get(i).size()];
+            for (int j = 0; j < allBestHistory.get(i).size(); j++){
+                h[j] = allBestHistory.get(i).get(j);
+                g[j] = allAllHistory.get(i).get(j);
+            }
+            plot.addLinePlot("Best cost history for "+i+"th run of "  + numRunsForAverage,  h);
+            //plot.addLinePlot("Cost history", g);
+        }
+        // maybe plot only best history to reduce clutter
         plot.addLegend("NORTH");
+
         JFrame frame = new JFrame("Plot panel");
         frame.setSize(800,800);
         frame.setContentPane(plot);
@@ -75,7 +127,7 @@ public class SA {
         float temp = initialTemp;
 
         List<Integer> bestSolution = new ArrayList<>(solution);
-        float bestCost = 10000000;
+        float bestCost = 70000;
         int[][] bestMatrix = constructMatrix(bestSolution);
 
         int softLimit = 100000;

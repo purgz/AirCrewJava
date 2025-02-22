@@ -300,7 +300,6 @@ public class ImprovedBGA extends  BGA{
 
         int i = 0;
         while (i < maxIter || numViolations(constructMatrixFromGeno(bestsolution)) > 0){
-
             i++;
             timeSinceBestChanged++;
 

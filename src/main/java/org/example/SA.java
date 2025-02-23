@@ -3,8 +3,10 @@ package org.example;
 import org.math.plot.Plot2DPanel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 
 public class SA {
 
@@ -34,10 +36,10 @@ public class SA {
 
         if (!(fileOption.equals("1") || fileOption.equals("2") || fileOption.equals("3"))){
             if (runFromCmd){
-                System.out.println("Invalid argument");
+                System.out.println("Invalid argument - use 1, 2, or 3 to specify file");
+                return;
             }
         }
-
 
         // Run 30 times for each file and get average
         String file1 = "/sppnw41.txt";
@@ -45,6 +47,18 @@ public class SA {
         String file3 = "/sppnw43.txt";
 
         String fileToRun = file1;
+
+
+        if (runFromCmd){
+            if (fileOption.equals("1")){
+                fileToRun = file1;
+            } else if (fileOption.equals("2")){
+                fileToRun = file2;
+            } else if (fileOption.equals("3")){
+                fileToRun = file3;
+            }
+        }
+
 
         System.out.println("Running Simulated annealing on " + fileToRun);
 
@@ -88,6 +102,7 @@ public class SA {
 
         System.out.println("Producing plot of best and all history for " + fileToRun);
         Plot2DPanel plot = new Plot2DPanel();
+        Plot2DPanel plot2 = new Plot2DPanel();
 
         for (int i = 0; i < allBestHistory.size(); i++){
             double[] h = new double[allBestHistory.get(i).size()];
@@ -97,14 +112,36 @@ public class SA {
                 g[j] = allAllHistory.get(i).get(j);
             }
             plot.addLinePlot("Best cost history for "+i+"th run of "  + numRunsForAverage,  h);
-            //plot.addLinePlot("Cost history", g);
+            if (i == 0){
+                // Only going to keep track of cost history for one iteration since
+                // graph becomes too cluttered otherwise
+                // just want to demonstrate what simulated annealing does.
+                plot2.addLinePlot("Cost history", g);
+            }
         }
         // maybe plot only best history to reduce clutter
-        plot.addLegend("NORTH");
+        plot.addLegend("SOUTH");
+        plot.setPreferredSize(new Dimension(600,600));
+        plot2.setPreferredSize(new Dimension(600,600));
+        plot2.addLegend("SOUTH");
 
-        JFrame frame = new JFrame("Plot panel");
-        frame.setSize(800,800);
-        frame.setContentPane(plot);
+        JPanel panel = new JPanel(new GridLayout(1,2));
+
+        JPanel plot1Panel = new JPanel();
+        plot1Panel.add(plot);
+        plot1Panel.setSize(800,800);
+        panel.add(plot1Panel);
+
+
+        JPanel plot2Panel = new JPanel();
+        plot2Panel.setSize(800,800);
+        plot2Panel.add(plot2);
+        panel.add(plot2Panel);
+
+        JFrame frame = new JFrame("Best cost with SA on" + fileToRun);
+        frame.setSize(1600,800);
+        frame.setContentPane(panel);
+
         frame.setVisible(true);
 
 

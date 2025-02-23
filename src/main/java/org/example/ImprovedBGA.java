@@ -28,7 +28,8 @@ public class ImprovedBGA extends  BGA{
 
         if (!(fileOption.equals("1") || fileOption.equals("2") || fileOption.equals("3"))){
             if (runFromCmd){
-                System.out.println("Invalid argument");
+                System.out.println("Invalid argument - use 1,2 or 3 to specify file");
+                return;
             }
         }
 
@@ -50,7 +51,6 @@ public class ImprovedBGA extends  BGA{
             } else if (fileOption.equals("3")){
                 fileToRun = file3;
             }
-
         }
 
         List<List<Double>> allBestHistory  = new ArrayList<>();
@@ -102,8 +102,8 @@ public class ImprovedBGA extends  BGA{
             //plot.addLinePlot("Cost history", g);
         }
         // maybe plot only best history to reduce clutter
-        plot.addLegend("NORTH");
-        JFrame frame = new JFrame("Plot panel");
+        plot.addLegend("SOUTH");
+        JFrame frame = new JFrame("Best cost with IBGA on : " + fileToRun);
         frame.setSize(800,800);
         frame.setContentPane(plot);
         frame.setVisible(true);

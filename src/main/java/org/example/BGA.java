@@ -45,7 +45,8 @@ public class BGA {
 
         if (!(fileOption.equals("1") || fileOption.equals("2") || fileOption.equals("3"))){
             if (runFromCmd){
-                System.out.println("Invalid argument");
+                System.out.println("Invalid argument - Use 1,2 or 3 for file number");
+                return;
             }
         }
 
@@ -122,8 +123,8 @@ public class BGA {
             //plot.addLinePlot("Cost history", g);
         }
         // maybe plot only best history to reduce clutter
-        plot.addLegend("NORTH");
-        JFrame frame = new JFrame("Plot panel");
+        plot.addLegend("SOUTH");
+        JFrame frame = new JFrame("Best cost with BGA on " + fileToRun);
         frame.setSize(800,800);
         frame.setContentPane(plot);
         frame.setVisible(true);

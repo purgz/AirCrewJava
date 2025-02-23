@@ -12,9 +12,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d9d02585-cd99-4041-9962-e633c04f3e0d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/AircrewSchedulingJava_BGA.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/AircrewSchedulingJava_BGA.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/AircrewSchedulingJava_BGA/AircrewSchedulingJava.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/AircrewSchedulingJava_BGA/AircrewSchedulingJava.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/AircrewSchedulingJava_IBGA/AircrewSchedulingJava.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/AircrewSchedulingJava_IBGA/AircrewSchedulingJava.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/AircrewSchedulingJava_SA/AircrewSchedulingJava.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/AircrewSchedulingJava_SA/AircrewSchedulingJava.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/BGA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/BGA.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/ImprovedBGA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/ImprovedBGA.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/SA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/SA.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +74,7 @@
       <recent name="G:\AircrewSchedulingJava\src\main\resources" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ImprovedBGA">
+  <component name="RunManager" selected="Application.SA">
     <configuration name="BGA" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.example.BGA" />
       <module name="AircrewSchedulingJava" />
@@ -112,8 +116,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.ImprovedBGA" />
         <item itemvalue="Application.SA" />
+        <item itemvalue="Application.ImprovedBGA" />
         <item itemvalue="Application.BGA" />
       </list>
     </recent_temporary>
@@ -141,6 +145,7 @@
       <workItem from="1740234825007" duration="6670000" />
       <workItem from="1740241985115" duration="332000" />
       <workItem from="1740242341528" duration="972000" />
+      <workItem from="1740298986316" duration="2001000" />
     </task>
     <servers />
   </component>

@@ -18,7 +18,6 @@
       <change beforePath="$PROJECT_DIR$/out/artifacts/AircrewSchedulingJava_SA/AircrewSchedulingJava.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/AircrewSchedulingJava_SA/AircrewSchedulingJava.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/BGA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/BGA.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/ImprovedBGA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/ImprovedBGA.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/SA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/SA.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,7 +144,12 @@
       <workItem from="1740234825007" duration="6670000" />
       <workItem from="1740241985115" duration="332000" />
       <workItem from="1740242341528" duration="972000" />
-      <workItem from="1740298986316" duration="2001000" />
+      <workItem from="1740298986316" duration="2210000" />
+      <workItem from="1740302340262" duration="448000" />
+      <workItem from="1740327981389" duration="91000" />
+      <workItem from="1740419049251" duration="1441000" />
+      <workItem from="1740424768043" duration="31000" />
+      <workItem from="1740488070537" duration="1075000" />
     </task>
     <servers />
   </component>

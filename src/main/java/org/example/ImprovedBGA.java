@@ -41,7 +41,6 @@ public class ImprovedBGA extends  BGA{
 
         String fileToRun = file1;
 
-        System.out.println("Running improved binary genetic algorithm (paper 1) on " + fileToRun);
 
         if (runFromCmd){
             if (fileOption.equals("1")){
@@ -52,6 +51,8 @@ public class ImprovedBGA extends  BGA{
                 fileToRun = file3;
             }
         }
+        System.out.println("Running improved binary genetic algorithm (paper 1) on " + fileToRun);
+
 
         List<List<Double>> allBestHistory  = new ArrayList<>();
         List<List<Double>> allAllHistory = new ArrayList<>();
